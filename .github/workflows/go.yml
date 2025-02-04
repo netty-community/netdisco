@@ -1,28 +1,60 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
-name: Go
+name: Build and Release Go Binary
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  release:
+    types:
+      - created
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [linux, macos, windows]
+        go_version: [1.21]
+        architecture: [amd64, arm64]
+
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.20'
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go_version }}
 
-    - name: Build
-      run: go build -v ./...
+      - name: Install dependencies
+        run: |
+          go mod tidy
 
-    - name: Test
-      run: go test -v ./...
+      - name: Build the Go binary
+        run: |
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.architecture }} go build -o netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
+
+      - name: Upload Go binary as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
+          path: netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Upload assets to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            netdisco-linux-amd64
+            netdisco-macos-amd64
+            netdisco-macos-arm64
+            netdisco-windows-amd64.exe
+
+      - name: Clean up build artifacts
+        run: |
+          rm netdisco-linux-amd64 netdisco-macos-amd64 netdisco-macos-arm64 netdisco-windows-amd64.exe
