@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [linux, macos, windows]
+        os: [linux, darwin, windows]
         go_version: [1.21]
         architecture: [amd64, arm64]
 
@@ -51,10 +51,10 @@ jobs:
         with:
           files: |
             netdisco-linux-amd64
-            netdisco-macos-amd64
-            netdisco-macos-arm64
+            netdisco-darwin-amd64
+            netdisco-darwin-arm64
             netdisco-windows-amd64.exe
 
       - name: Clean up build artifacts
         run: |
-          rm netdisco-linux-amd64 netdisco-macos-amd64 netdisco-macos-arm64 netdisco-windows-amd64.exe
+          rm netdisco-linux-amd64 netdisco-darwin-amd64 netdisco-darwin-arm64 netdisco-windows-amd64.exe
