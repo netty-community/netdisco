@@ -1,6 +1,7 @@
 # Netdisco
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 > It's a brand new version of [netty_snmp](https://github.com/netty-community/netty-snmp) and re-write with Go for easy running script.
+> A lot of new items supported in Go version.
 
 # Network Device information Discovery via SNMP
 
