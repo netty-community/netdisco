@@ -30,7 +30,7 @@ jobs:
 
       - name: Build the Go binary
         run: |
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.architecture }} go build cli/main.go -o netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.architecture }} go build -o netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }} -ldflags="-w -s" cli/main.go
 
       - name: Upload Go binary as an artifact
         uses: actions/upload-artifact@v4
