@@ -30,13 +30,13 @@ jobs:
 
       - name: Build the Go binary
         run: |
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.architecture }} go build -o netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }} -ldflags="-w -s" cli/main.go
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.architecture }} go build -o netdisco-${{ matrix.os }}-${{ matrix.architecture }} -ldflags="-w -s" cli/main.go
 
       - name: Upload Go binary as an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
-          path: netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
+          name: netdisco-${{ matrix.os }}-${{ matrix.architecture }}
+          path: netdisco-${{ matrix.os }}-${{ matrix.architecture }}
 
   release:
     needs: build
@@ -54,6 +54,8 @@ jobs:
             netdisco-darwin-amd64
             netdisco-darwin-arm64
             netdisco-windows-amd64.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clean up build artifacts
         run: |
