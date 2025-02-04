@@ -33,7 +33,7 @@ jobs:
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.architecture }} go build cli/main.go -o netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
 
       - name: Upload Go binary as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
           path: netdisco-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.go_version }}
